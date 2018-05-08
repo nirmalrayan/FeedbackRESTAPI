@@ -1,0 +1,19 @@
+{
+  "name": "MediBuddy_Feedback",
+  "version": "0.0.0",
+  "description": "User Feedback REST API",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "env2": "^2.2.0",
+    "express": "^4.14.0",
+    "mssql": "^ 3.3.0"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": {
+    "name": "Nirmal Rayan",
+    "email": "nirmal_rayan@yahoo.com"
+  }
+}
