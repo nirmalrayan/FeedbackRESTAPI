@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");
 var sql = require("mssql");
 var app = express();
 require('env2')('.env'); // loads all entries into process.env
+var http = require("http");
 
 // Setting Base directory
 app.use(bodyParser.json());
@@ -56,8 +57,27 @@ var  executeQuery = function(res, query){
 					res.send(err);
 				}
 				else {
-					console.log(JSON.stringify(recordset));
+//					console.log(JSON.stringify(recordset));
 					res.send(JSON.stringify(recordset));
+					console.log("Recordset length: "+JSON.stringify(recordset.length));
+					for (var item=0; item <  recordset.length; item++){
+						var dataitem = recordset[item];
+						var request = require('request');
+						if(item < 1){
+
+								console.log(JSON.stringify(recordset[1]));
+
+								request.post({url:process.env.PowerBIURL, form: JSON.stringify(dataitem)}, function optionalCallback(err, httpResponse, body) {
+									if (err) {
+									  return console.error('upload failed:', err);
+									}
+									console.log('Upload successful!  Server responded with:', httpResponse);
+								  });
+							
+							
+						}
+					//	console.log("Item number: "+item+" and record is: "+JSON.stringify(recordset[item]));
+					}
 				}
 			});
 		}
@@ -68,3 +88,14 @@ app.get("/api/feedback", function(req , res){
 	var query = "select * from ["+process.env.AzureSQLDatabase+"].[dbo].["+process.env.AzureSQLDBTable+"]";
 	executeQuery (res, query);
 });
+
+
+function sendFeedbacktoPowerBI(records){
+	request.post({url:process.env.PowerBIURL, form: JSON.stringify(records)}, function optionalCallback(err, httpResponse, body) {
+		if (err) {
+		  return console.error('upload failed:', err);
+		}
+		console.log('Upload successful!  Server responded with:', body);
+	  });
+
+}
